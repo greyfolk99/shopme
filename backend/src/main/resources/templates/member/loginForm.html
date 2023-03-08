@@ -44,7 +44,10 @@
         <!-- 로그인 버튼 -->
         <button type="submit" class="btn btn-dark m-2">로그인</button>
         <button type="button" class="btn btn-dark m-2" onClick="location.href='/auth/join'">회원가입</button>
-
+        <div>
+          <label for="remember-me">로그인 상태 유지</label>
+          <input type="checkbox" name="remember-me" id="remember-me" class="m-2">
+        </div>
         <!-- CSRF 토큰 -->
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
