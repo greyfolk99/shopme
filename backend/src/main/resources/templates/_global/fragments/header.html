@@ -3,10 +3,8 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <meta charset="UTF-8"/>
 <div th:fragment="header" >
-  <div class="text-center align-middle">
-    <a class="navbar-brand p-2 " href="/">SHOPME</a>
-  </div>
   <nav class="navbar navbar-expand navbar-dark py-3 ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+    <a class="navbar-brand p-2 " href="/">SHOPME</a>
     <div class="container d-flex px-3">
       <form action="/" method="get" role="search" class="form-search pr-3">
         <div class="form-group d-flex">
@@ -69,12 +67,12 @@
                         beforeSend: function (xhr) {
                           xhr.setRequestHeader(header, token);
                         },
-                        success: function (result) {
-                          if (result) {
-                            alert('탈퇴 되었습니다.');
-                            location.href = '/';
+                        success: function (xhr, status, error) {
+                          if (xhr.status === 200) {
+                            alert("탈퇴되었습니다.")
+                            location.href = "/member/logout";
                           } else {
-                            alert('탈퇴에 실패했습니다.');
+                            alert("탈퇴에 실패하였습니다.")
                           }
                         }
                       });
@@ -83,7 +81,7 @@
                 </script>
               </li>
               <li sec:authorize="isAuthenticated()">
-                <a class="dropdown-item" href="/logout">로그아웃</a>
+                <a class="dropdown-item" href="/member/logout">로그아웃</a>
               </li>
             </ul>
           </li>

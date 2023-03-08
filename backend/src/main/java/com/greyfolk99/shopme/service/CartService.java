@@ -48,12 +48,15 @@ public class CartService {
         checkStock(item, cartItemRequest.getCount());
         // CartItem 없으면 생성, 있으면 수량 추가
         CartItem cartItem = cartItemRepository.findByCartIdAndItemId(cart.getId(), item.getId())
+            .map(existingCartItem -> {
+                existingCartItem.addCount(cartItemRequest.getCount());
+                return cartItemRepository.save(existingCartItem);
+            })
             .orElseGet(() -> cartItemRepository.save(CartItem.of(cart, item, cartItemRequest.getCount())));
-        if (cartItem.getCount() != cartItemRequest.getCount()) cartItem.addCount(cartItemRequest.getCount());
         return cartItem.getId();
     }
 
-    public void checkStock(Item item, int count) {
+        public void checkStock(Item item, int count) {
         int currentStock = item.getStock();
         if(currentStock < count) throw new OutOfStockException("수량이 부족합니다."+"남은 상품 수량은 "+ currentStock+"개 입니다.");
     }
