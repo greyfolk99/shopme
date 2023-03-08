@@ -29,7 +29,6 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final ItemImageService itemImageService;
-    private final ItemImageRepository itemImageRepository;
 
     // 중복 메소드
     public Item findItemById(Long id){

@@ -88,7 +88,7 @@ public class SecurityConfig {
             .authenticationEntryPoint(authenticationEntryPoint())
             .and()
         .logout()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+            .logoutRequestMatcher(new AntPathRequestMatcher("/member/member/logout"))
             .logoutSuccessUrl("/")
             .and()
 
@@ -146,7 +146,7 @@ public class SecurityConfig {
             String redirectUrl = (String) session.getAttribute("prevPage");
             if (redirectUrl == null) {response.sendRedirect("/"); return;}
             session.removeAttribute("prevPage");
-            if (redirectUrl.contains("/auth") || redirectUrl.contains("/logout")) {
+            if (redirectUrl.contains("/auth") || redirectUrl.contains("/member/logout")) {
                 response.sendRedirect("/"); return;
             }
             response.sendRedirect(redirectUrl);

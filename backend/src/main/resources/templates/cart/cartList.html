@@ -3,8 +3,6 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{_global/layouts/mainLayout}">
 <head>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script th:inline="javascript" th:src="@{/js/cartList.js}"></script>
     <link th:href="@{/css/cartList.css}" rel="stylesheet" />
 </head>
