@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{_global/layouts/mainLayout}">
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script th:inline="javascript" th:src="@{/js/cartList.js}"></script>
+    <link th:href="@{/css/cartList.css}" rel="stylesheet" />
+</head>
+
+<body>
+<div layout:fragment="content">
+    <main class="container my-5">
+    <h2 class="m-5 text-center">장바구니 목록</h2>
+        <table class="table">
+            <!-- 테이블 헤더 -->
+            <thead>
+            <tr class="text-center">
+                <!-- 상품 전체 선택 -->
+                <th class="column-1"><input type="checkbox" id="checkall" onclick="checkAll()"></th>
+                <!-- 상품 정보 -->
+                <th class="column-2">상품정보</th>
+                <!-- 상품 합계 -->
+                <th class="column-3">합계(원)</th>
+            </tr>
+            </thead>
+
+            <!-- 테이블 바디 -->
+            <tbody>
+            <tr th:each="cartItem : ${cartItems}">
+                <!-- 상품 체크 박스 -->
+                <td class="text-center align-middle">
+                    <input id="cartChkBox" type="checkbox" name="cartChkBox"
+                        th:data-item-id="${cartItem.itemId}">
+                </td>
+                <!-- 상품 정보 -->
+                <td class="d-flex">
+                    <!-- 상품 이미지 -->
+                    <div class="thumbnail align-self-center">
+                        <img class="rounded thumbnail"
+                            th:src="${'/' + cartItem.fullImagePath}"
+                            th:alt="${cartItem.itemName}">
+                    </div>
+                    <div class="align-items-baseline">
+                        <!-- 상품 이름 -->
+                        <span th:text="${cartItem.itemName}" class="font-weight-bold"></span>
+                        <div class="fs18 font-weight-light">
+                            <span class="input-group mt-2">
+                                <!-- 상품 가격 -->
+                                <span class="align-self-center mr-2"
+                                    th:id="'price_' + ${cartItem.itemId}"
+                                    th:data-price="${cartItem.price}"
+                                    th:text="${#numbers.formatInteger(cartItem.price, 3, 'COMMA')} + '원'">
+                                </span>
+                                <!-- 상품 수량 -->
+                                <input type="number" name="count" class="form-control mr-2"
+                                    th:id="'count_' + ${cartItem.itemId}"
+                                    th:value="${cartItem.count}" min="1"
+                                    onchange="changeCount(this)">
+                                <!-- 상품 삭제 버튼 -->
+                                <button type="button" class="close" aria-label="Close">
+                                    <span aria-hidden="true"
+                                        th:id="'delete_'+${cartItem.itemId}"
+                                        onclick="deleteCartItem(this)">&times;
+                                    </span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </td>
+                <!-- 상품 합계 -->
+                <td class="text-center align-middle">
+                    <span name="totalPrice"
+                        th:id="'totalPrice_' + ${cartItem.itemId}"
+                        th:text="${#numbers.formatInteger(cartItem.price * cartItem.count, 3, 'COMMA')}">
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+        <!-- 총 금액 -->
+        <div class="text-right my-3">
+            총 주문 금액 : <span id="orderTotalPrice" class="text-danger w-30" style="min-width: 100px">0 원</span>
+        </div>
+        <hr>
+        <!-- 주문하기 버튼 -->
+        <div class="text-right my-3">
+            <button type="button" id="order-button" class="btn btn-dark btn-md"
+                onclick=order()>주문하기</button>
+        </div>
+    </main>
+</div>
+</body>
+</html>

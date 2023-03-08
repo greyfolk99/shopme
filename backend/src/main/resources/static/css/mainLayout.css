@@ -1,0 +1,47 @@
+
+body {
+    min-height: 100%;
+}
+
+@media (min-width: 992px){
+    .container {
+    max-width: 1100px;
+}}
+
+.navbar-expand .navbar-nav .dropdown-menu{
+    transform: translateX(-65%);
+}
+
+.footer {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
+}
+
+.content-items {
+    margin: 30px auto;
+    vertical-align: middle
+}
+* {
+    font-size: 14px;
+}
+.form-group{
+    margin-bottom: 0;
+}
+
+.banner {
+    display: flex;
+    overflow: hidden;
+    height: 400px;
+    align-items: center;
+    justify-content: center;
+}
+.banner img {
+    width: auto;
+    height: 100%;
+    object-fit: cover;
+}
+

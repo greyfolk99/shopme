@@ -1,0 +1,30 @@
+# Compiled class file
+backend/*.class
+
+# Log files
+backend/log/
+backend/logs/
+
+# IntelliJ IDEA files
+backend/.idea/
+backend/*.iml
+backend/*.iws
+backend/*.ipr
+
+# Gradle files
+backend/.gradle/
+backend/build/
+backend/!.gradle/
+backend/!build.gradle
+backend/!gradle-wrapper.jar
+
+# Maven files
+backend/target/
+backend/*/target/
+backend/*.jar
+backend/*.war
+backend/*.ear
+
+# Spring Boot files
+backend/src/main/resources/application.yml
+/.idea/

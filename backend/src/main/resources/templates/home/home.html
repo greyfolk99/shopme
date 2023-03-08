@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{_global/layouts/mainLayout}"
+      lang="ko">
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.carousel').carousel({
+                interval: 4000,
+                pause: "hover",
+                wrap: true,
+                keyboard : true
+            });
+        });
+    </script>
+
+    <style>
+        .top-sales-item {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            align-items: center;
+        }
+        .top-sales-item-text{
+            vertical-align: middle;
+            padding: 20px;
+            max-width: 350px;
+        }
+
+        .margin{
+            margin-bottom:30px;
+        }
+
+        a {
+            text-decoration:none;
+        }
+        a:hover {
+            text-decoration:none;
+        }
+        .center{
+            text-align:center;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: auto;
+            padding: 20px;
+        }
+        .card-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 50ch;
+            max-width: 100%;
+        }
+        .card-text{
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .banner .text h3{
+            height: 100px;
+            width: 100%;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            font-size: 36px;
+            z-index: 1;
+        }
+        .banner .text {
+            top: 20%;
+        }
+        .carousel {
+            height: 50%;
+            max-width: 250px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <main class="container">
+
+    <!-- 배너 -->
+    <div class="banner shadow-sm position-relative my-4 text-white rounded bg-dark">
+        <div class="position-absolute text-center w-100 h-100 d-flex flex-column justify-content-center">
+            <h1 class="display-4 fst-italic">SHOPME</h1>
+            </h1>
+        </div>
+        <img th:src="@{/image/banner/home.jpg}">
+    </div>
+
+    <!-- 검색 결과 -->
+    <input type="hidden" name="searchQuery" th:value="${searchForm.searchQuery}">
+    <div th:if="${not #strings.isEmpty(searchForm.searchQuery)}" class="center">
+        <p class="h3 font-weight-bold" th:text="${searchForm.searchQuery} + ' 검색 결과'"></p>
+    </div>
+
+    <!-- 상품 리스트 -->
+    <div class="row">
+        <th:block th:each="item, status: ${homeItems}">
+            <div class="col-sm-6 col-md-4 col-lg-4 margin">
+                <div class="card">
+                    <a th:href="@{/item/{id}(id = ${item.id})}" class="text-dark">
+                        <div class="card-img-top">
+                            <img th:src="${'/' + item.fullImagePath}" class="card-img-top" th:alt="${item.itemName}">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title" th:text="${item.itemName}"></h4>
+                            <p class="card-text" th:text="${item.itemDetail}"></p>
+                            <h3 class="card-title text-danger" th:text="${#numbers.formatInteger(item.price, 3, 'COMMA')}+'원'"></h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+    <!-- 페이지 버튼 -->
+    <div>
+        <ul class="pagination justify-content-center">
+            <li class="page-item"
+                th:classappend="${homeItems.number + 1} <= 1 ? ' disabled' : ''">
+                <a th:text="'Previous'"
+                   th:href="@{/(page=${homeItems.number}, searchQuery=${searchForm.searchQuery})}"
+                   aria-label='Previous' class="page-link">
+                </a>
+            </li>
+            <li class="page-item" th:each="barNumber : ${barNumbers}"
+                th:classappend="${barNumber == homeItems.number + 1}?' active' : ''">
+                <a th:text="${barNumber}"
+                   th:href="@{/(page=${barNumber}, searchQuery=${searchForm.searchQuery})}"
+                   class="page-link"></a>
+            </li>
+            <li class="page-item"
+                th:classappend="${homeItems.number + 1 >= homeItems.totalPages} ? ' disabled' : ''">
+                <a th:text="'Next'"
+                   th:href="@{/(page=${homeItems.number + 2}, searchQuery=${searchForm.searchQuery})}"
+                   aria-label='Next' class="page-link">
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<meta charset="UTF-8"/>
+<div th:fragment="header" >
+  <div class="text-center align-middle">
+    <a class="navbar-brand p-2 " href="/">SHOPME</a>
+  </div>
+  <nav class="navbar navbar-expand navbar-dark py-3 ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+    <div class="container d-flex px-3">
+      <form action="/" method="get" role="search" class="form-search pr-3">
+        <div class="form-group d-flex">
+          <input type="search" name="searchQuery" placeholder="Search your product" class="form-control pl-4" />
+          <button class="btn bg-white search" type="submit">
+            <span class="fa fa-search"></span>
+          </button>
+        </div>
+      </form>
+      <button class="navbar-toggler ms-auto" type="button" data-toggle="collapse"
+              data-target="#navbar2" aria-controls="navbar2"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbar2">
+        <ul class="navbar-nav text-nowrap ml-auto">
+          <li class="nav-item px-2">
+            <a class="nav-link" sec:authorize="isAuthenticated()" th:text="${#authentication.name.split('@')[0] +' 님'}"></a>
+          </li>
+          <li class="nav-item px-2">
+            <a class="nav-link" href="/cart">
+              <i class="fa fa-shopping-cart fa-lg"></i>
+            </a>
+          </li>
+          <li class="nav-item dropdown px-2">
+            <a class="nav-link" id="dropdown03" data-toggle="dropdown" aria-expanded="false">
+              <span class="fa fa-user fa-lg"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdown03">
+              <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                <a class="dropdown-item" href="/admin/item/new">상품 등록</a>
+              </li>
+              <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+                <a class="dropdown-item" href="/admin/items">상품 관리</a>
+              </li>
+              <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="dropdown-item" href="/order/list">주문내역</a>
+              </li>
+              <li sec:authorize="isAnonymous()">
+                <a class="dropdown-item" href="/auth/login">로그인</a>
+              </li>
+              <li sec:authorize="isAuthenticated()">
+                <a class="dropdown-item" href="/member/edit">회원 정보 수정</a>
+              </li>
+              <li sec:authorize="isAuthenticated()">
+                <a class="dropdown-item" href="/member/delete">회원 탈퇴</a>
+                <script>
+                  $(document).ready(function () {
+                    $('.dropdown-item[href="/member/delete"]').click(function (e) {
+                      e.preventDefault();
+                      const token = $("meta[name='_csrf']").attr("content");
+                      const header = $("meta[name='_csrf_header']").attr("content");
+                      if (!confirm('정말 탈퇴하시겠습니까?')) {
+                        alert("탈퇴가 취소되었습니다.")
+                        return;
+                      }
+                      $.ajax({
+                        url: '/member/delete',
+                        type: 'DELETE',
+                        beforeSend: function (xhr) {
+                          xhr.setRequestHeader(header, token);
+                        },
+                        success: function (result) {
+                          if (result) {
+                            alert('탈퇴 되었습니다.');
+                            location.href = '/';
+                          } else {
+                            alert('탈퇴에 실패했습니다.');
+                          }
+                        }
+                      });
+                    })
+                  });
+                </script>
+              </li>
+              <li sec:authorize="isAuthenticated()">
+                <a class="dropdown-item" href="/logout">로그아웃</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+</html>
