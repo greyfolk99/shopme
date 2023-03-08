@@ -88,7 +88,7 @@ public class SecurityConfig {
             .authenticationEntryPoint(authenticationEntryPoint())
             .and()
         .logout()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/member/member/logout"))
+            .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
             .logoutSuccessUrl("/")
             .and()
 
