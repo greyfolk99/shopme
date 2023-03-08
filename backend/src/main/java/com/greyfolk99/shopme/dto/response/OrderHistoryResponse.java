@@ -15,6 +15,7 @@ public class OrderHistoryResponse {
     private Long orderId;
     private String orderDate;
     private OrderStatus orderStatus;
+    private int totalPrice;
     private List<OrderItemResponse> orderItemResponseList = new ArrayList<>();
 
     public static OrderHistoryResponse from(Order order) {
@@ -31,5 +32,6 @@ public class OrderHistoryResponse {
         this.orderId = order.getId();
         this.orderDate = order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.orderStatus = order.getOrderStatus();
+        this.totalPrice = order.getTotalPrice();
     }
 }
