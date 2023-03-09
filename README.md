@@ -14,3 +14,7 @@
 
 ### ERD
 ![mermaid-diagram-2023-02-26-123533](https://user-images.githubusercontent.com/115934563/223372203-18147459-c74e-425c-bae2-a67c3a423190.png)
+
+
+### Git 관리 GitKraken
+![image](https://user-images.githubusercontent.com/115934563/223895883-1676010d-c40f-486f-9a3d-5fa5a4f3bee3.png)
