@@ -23,7 +23,6 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "is_deleted = 0")
 @SQLDelete(sql = "UPDATE member SET is_deleted = 1, deleted_at = NOW() WHERE member_uuid = ?")
-@EqualsAndHashCode(of = {"email","uuid"}, callSuper = false)
 public class Member extends BaseEntity implements UserDetails, OAuth2User {
 
     @Id @GeneratedValue(generator = "uuid2") @GenericGenerator(name = "uuid2", strategy = "uuid2")
