@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/>
 <div th:fragment="header" >
   <nav class="navbar navbar-expand navbar-dark py-3 ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-    <a class="navbar-brand p-2 " href="/">SHOPME</a>
     <div class="container d-flex px-3">
+      <a class="navbar-brand p-2 " href="/">SHOPME</a>
       <form action="/" method="get" role="search" class="form-search pr-3">
         <div class="form-group d-flex">
           <input type="search" name="searchQuery" placeholder="Search your product" class="form-control pl-4" />
@@ -67,16 +67,15 @@
                         beforeSend: function (xhr) {
                           xhr.setRequestHeader(header, token);
                         },
-                        success: function (xhr, status, error) {
-                          if (xhr.status === 200) {
-                            alert("탈퇴되었습니다.")
-                            location.href = "/member/logout";
-                          } else {
-                            alert("탈퇴에 실패하였습니다.")
-                          }
+                        success: function (result) {
+                          alert("탈퇴되었습니다.")
+                          location.href = "/member/logout";
+                        },
+                        error: function (xhr, status, error) {
+                          alert("탈퇴에 실패하였습니다.")
                         }
                       });
-                    })
+                    });
                   });
                 </script>
               </li>
