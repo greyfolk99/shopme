@@ -28,7 +28,7 @@ import java.util.List;
 @ToString
 @Where(clause = "is_deleted = 0")
 @SQLDelete(sql = "UPDATE item SET is_deleted = 1, deleted_at = NOW() WHERE item_id = ?")
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Item extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "item_id")

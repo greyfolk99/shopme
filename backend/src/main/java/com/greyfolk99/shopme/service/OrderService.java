@@ -92,7 +92,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public Order validateOrder(Long orderId, final Member member) {
         Order order = findOrderById(orderId);
-        if (!order.getMember().equals(member))
+        if (member.getUuid() != order.getMember().getUuid())
             throw new InternalServerException(ExceptionClass.MEMBER, HttpStatus.UNAUTHORIZED, "잘못된 요청입니다.");
         return order;
     }
