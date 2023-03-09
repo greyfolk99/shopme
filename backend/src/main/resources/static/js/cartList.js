@@ -55,11 +55,10 @@
             type: "PATCH",
             data: JSON.stringify(param),
             beforeSend: function (xhr) {
-                /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
                 xhr.setRequestHeader(header, token);
             },
             contentType: "application/json; charset=utf-8",
-            dataType: "text",
+            dataType: "json",
             cache: false,
             success: function (result, status) {
                 console.log("cartItem count update success");},
@@ -70,7 +69,7 @@
                     location.href = '/auth/login';
                 }
                 else {
-                    alert(jqXHR.responseText);
+                    alert(jqXHR.responseJSON.message);
                 }
             }
         });
@@ -93,7 +92,7 @@
                 xhr.setRequestHeader(header, token);
             },
             contentType: "application/json; charset=utf-8",
-            dataType: "text",
+            dataType: "json",
             cache: false,
             success: function (result, status) {
                 location.href = '/cart';
@@ -144,7 +143,7 @@
                     alert('로그인 후 이용해주세요');
                     location.href = '/auth/login';
                 } else {
-                    alert('주문에 실패했습니다.');
+                    alert(jqXHR.responseJSON.message);
                 }
             }
         });
