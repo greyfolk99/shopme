@@ -90,8 +90,10 @@ public class OrderService {
 
     //  Principal의 Username 검증
     @Transactional(readOnly = true)
-    public Order validateOrder(Long orderId, final Member member) {
+    public Order validateOrder(Long orderId, Member member) {
         Order order = findOrderById(orderId);
+        System.out.println("member.getUuid() = " + member.getUuid());
+        System.out.println("member.getUuid() = " + order.getMember().getUuid());
         if (member.getUuid() != order.getMember().getUuid())
             throw new InternalServerException(ExceptionClass.MEMBER, HttpStatus.UNAUTHORIZED, "잘못된 요청입니다.");
         return order;

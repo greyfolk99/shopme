@@ -15,6 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.UUID;
@@ -78,11 +80,20 @@ public class MemberController {
 
     @DeleteMapping("/member/delete")
     public ResponseEntity<?> deleteMember(
+            HttpServletRequest request,
             Principal principal
     ) {
         Member member = (Member) memberService.loadUserByUsername(principal.getName());
-        SecurityContextHolder.clearContext();
         memberService.deleteMember(member);
+
+        // Invalidate the current session
+        request.getSession().invalidate();
+
+        // Clear the remember-me cookie
+        Cookie cookie = new Cookie("remember-me", null);
+        cookie.setMaxAge(0);
+
+        SecurityContextHolder.clearContext();
         return ResponseEntity.ok().build();
     }
 }

@@ -43,6 +43,9 @@ layout:decorate="~{_global/layouts/mainLayout}">
                   const paramData = {
                     orderId: orderId,
                   };
+                  if (!confirm("주문을 취소하시겠습니까?")) {
+                    return;
+                  }
                   $.ajax({
                     url: url,
                     type: "POST",
@@ -71,7 +74,7 @@ layout:decorate="~{_global/layouts/mainLayout}">
             </button>
             </th:block>
             <th:block th:unless="${order.orderStatus.name() == 'CONFIRMED'}">
-            <h6 style="margin-top : 6px">(취소 완료)</h6>
+              <button class="btn btn-outline-secondary" type="button" disabled>취소됨</button>
             </th:block>
           </div>
         </div>
