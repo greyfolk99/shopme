@@ -42,13 +42,13 @@
             xhr.setRequestHeader(header, token);
           },
           contentType: "application/json; charset=utf-8",
-          dataType : "text",
+          dataType : "json",
           error : function(jqXHR, status, error){
             if(jqXHR.status == 401){
               alert('로그인 후 이용해주세요');
               location.href="/auth/login";
             } else{
-              alert(jqXHR.responseText);
+              alert(jqXHR.responseJSON.message);
             }
           },
           cache : false,
@@ -71,7 +71,7 @@
             count : $("#count").val()}),
           beforeSend : function(xhr){ xhr.setRequestHeader(header, token);},
           contentType: "application/json; charset=utf-8",
-          dataType : "text",
+          dataType : "json",
           cache    : false,
           success  : function(result, status){
             console.log(status)
@@ -80,7 +80,7 @@
           },
           error : function(jqXHR, status, error){
             console.log(status)
-              alert(jqXHR.responseText);
+            alert(jqXHR.responseJSON.message);
           }
         });
       }

@@ -16,7 +16,7 @@ public class Cart extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO) @Column(name = "cart_id")
     private Long id;
-    @OneToOne(fetch = FetchType.LAZY) @JoinColumn(name = "member_id")
+    @OneToOne(fetch = FetchType.LAZY) @JoinColumn(name = "member_uuid")
     private Member member;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL) @ToString.Exclude @Builder.Default

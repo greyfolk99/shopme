@@ -5,6 +5,8 @@ import com.greyfolk99.shopme.domain.order.Order;
 import com.greyfolk99.shopme.dto.request.OrderItemDetailRequest;
 import com.greyfolk99.shopme.dto.request.OrderItemRequest;
 import com.greyfolk99.shopme.dto.response.OrderHistoryResponse;
+import com.greyfolk99.shopme.exception.ExceptionClass;
+import com.greyfolk99.shopme.exception.rest.ValidationFailedException;
 import com.greyfolk99.shopme.service.CartService;
 import com.greyfolk99.shopme.service.MemberService;
 import com.greyfolk99.shopme.service.OrderService;
@@ -24,6 +26,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.security.Principal;
 import java.util.*;
 
@@ -50,7 +53,7 @@ public class OrderController {
             for (FieldError fieldError : fieldErrors) {
                 sb.append(fieldError.getDefaultMessage());
             }
-            return new ResponseEntity<String>(sb.toString(), HttpStatus.BAD_REQUEST);
+            throw new ValidationFailedException(ExceptionClass.ITEM, sb.toString());
         }
 
         Member member = (Member) memberService.loadUserByUsername(principal.getName());
@@ -74,7 +77,7 @@ public class OrderController {
             for (FieldError fieldError : fieldErrors) {
                 sb.append(fieldError.getDefaultMessage());
             }
-            return new ResponseEntity<String>(sb.toString(), HttpStatus.BAD_REQUEST);
+            throw new ValidationFailedException(ExceptionClass.ITEM, sb.toString());
         }
         Member member = (Member) memberService.loadUserByUsername(principal.getName());
 
