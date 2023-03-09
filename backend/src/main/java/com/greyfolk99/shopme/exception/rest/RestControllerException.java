@@ -3,6 +3,7 @@ package com.greyfolk99.shopme.exception.rest;
 import com.greyfolk99.shopme.exception.ExceptionClass;
 import org.springframework.http.HttpStatus;
 
+
 public abstract class RestControllerException extends RuntimeException {
 
     private final static ExceptionClass DEFAULT_EXCEPTION_CLASS = ExceptionClass.GENERAL;

@@ -25,7 +25,7 @@
             url: "/admin/item/image/api/" + imageId,
             type: 'DELETE',
             contentType: "application/json; charset=utf-8",
-            dataType: "text",
+            dataType: "json",
             beforeSend: function(xhr) {
                 xhr.setRequestHeader(header, token);
             },
@@ -34,10 +34,7 @@
                 location.reload();
             },
             error: function (jqXHR, status, error) {
-                alert("error");
-                console.log(jqXHR);
-                console.log(status);
-                console.log(error);
+                alert(jqXHR.responseJSON.message);
             }
         });
     }

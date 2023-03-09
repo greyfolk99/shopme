@@ -29,7 +29,7 @@ const cartApi = () => {
                     alert('로그인 후 이용해주세요');
                     location.href = "/auth/login";
                 } else {
-                    message = jqXHR.responseJSON.message;
+                    alert(jqXHR.responseJSON.message);
                 }
             }
         })
@@ -55,8 +55,7 @@ const cartApi = () => {
                     alert('로그인 후 이용해주세요');
                     location.href = "/auth/login";
                 } else {
-                    const response = JSON.parse(jqXHR.responseText);
-                    alert(response.message);
+                    alert(jqXHR.responseJSON.message);
                 }
             }
         });
@@ -83,7 +82,7 @@ const cartApi = () => {
                     location.href = "/auth/login";
                 }
                 else {
-                    alert(jqXHR.responseText);
+                    alert(jqXHR.responseJSON.message);
                 }
 
             }
@@ -106,7 +105,7 @@ const cartApi = () => {
                     alert("로그인 후 이용해주세요");
                     location.href = "/auth/login";
                 } else {
-                    alert(jqXHR.responseText);
+                    alert(jqXHR.responseJSON.message);
                 }
             }
         });

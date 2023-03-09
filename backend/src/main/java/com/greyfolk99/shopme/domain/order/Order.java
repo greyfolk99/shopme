@@ -19,7 +19,7 @@ public class Order extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "order_id")
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "member_id")
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "member_uuid")
     private Member member;
     private LocalDateTime orderDate; // 주문일
     @Enumerated(EnumType.STRING)

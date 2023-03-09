@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -94,7 +95,7 @@ public class OrderService {
         Order order = findOrderById(orderId);
         System.out.println("member.getUuid() = " + member.getUuid());
         System.out.println("member.getUuid() = " + order.getMember().getUuid());
-        if (member.getUuid() != order.getMember().getUuid())
+        if (!StringUtils.equals(member.getUuid(), order.getMember().getUuid()))
             throw new InternalServerException(ExceptionClass.MEMBER, HttpStatus.UNAUTHORIZED, "잘못된 요청입니다.");
         return order;
     }

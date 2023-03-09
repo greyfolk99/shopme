@@ -18,7 +18,6 @@ import java.util.Map;
 
     response example:
 
-        dataType: application/json
         body: {
            "error type": "Bad Request",
            "code": "400",
