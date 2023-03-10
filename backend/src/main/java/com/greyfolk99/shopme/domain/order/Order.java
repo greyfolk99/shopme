@@ -25,7 +25,7 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus; // 주문상태
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
 
@@ -44,10 +44,12 @@ public class Order extends BaseEntity {
     public int getTotalPrice() {
         return orderItems.stream().mapToInt(OrderItem::getTotalPrice).sum();
     }
+
     public void cancel() {
         this.orderStatus = OrderStatus.CANCELLED;
         this.orderItems.forEach(OrderItem::cancel);
     }
+
     public void confirm() {
         this.orderStatus = OrderStatus.CONFIRMED;
         this.orderDate = LocalDateTime.now();
