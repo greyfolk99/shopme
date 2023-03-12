@@ -18,3 +18,115 @@
 
 ### Git 관리 GitKraken
 ![image](https://user-images.githubusercontent.com/115934563/223895883-1676010d-c40f-486f-9a3d-5fa5a4f3bee3.png)
+
+
+### Directory Tree
+│  ShopmeBackendApplication.java 
+│                                
+├─config
+│  │  AuditConfig.java
+│  │  PageConfig.java
+│  │  SecurityConfig.java
+│  │  SwaggerConfig.java
+│  │  WebMvcConfig.java
+│  │
+│  └─oAuth
+│          KakaoOAuth2Response.java
+│
+├─controller
+│  │  AdminItemController.java
+│  │  AuthController.java
+│  │  CartController.java
+│  │  HomeController.java
+│  │  ImageController.java
+│  │  ItemController.java
+│  │  MemberController.java
+│  │  OrderController.java
+│  │
+│  └─handler
+│          CookieHandler.java
+│          RestControllerExceptionHandler.java
+│
+├─domain
+│  │  BaseEntity.java
+│  │  BaseTimeEntity.java
+│  │
+│  ├─cart
+│  │      Cart.java
+│  │      CartItem.java
+│  │
+│  ├─item
+│  │      Item.java
+│  │      ItemImage.java
+│  │      ItemImageType.java
+│  │      ItemSearchDateType.java
+│  │      ItemStatus.java
+│  │
+│  ├─member
+│  │      Address.java
+│  │      Member.java
+│  │      Role.java
+│  │      RoleAdapter.java
+│  │
+│  ├─order
+│  │      Order.java
+│  │      OrderItem.java
+│  │      OrderStatus.java
+│  │
+│  └─resource
+│          FileInfo.java
+│          ImagePath.java
+│
+├─dto
+│  ├─form
+│  │      ItemForm.java
+│  │      MemberForm.java
+│  │      SearchForm.java
+│  │
+│  ├─request
+│  │      CartItemRequest.java
+│  │      CartOrderRequest.java
+│  │      ItemImageRequest.java
+│  │      OrderItemDetailRequest.java
+│  │      OrderItemRequest.java
+│  │
+│  └─response
+│          CartListResponse.java
+│          ItemDetailResponse.java
+│          ItemImageResponse.java
+│          ItemPreviewResponse.java
+│          OrderHistoryResponse.java
+│          OrderItemResponse.java
+│
+├─exception
+│  │  ExceptionClass.java
+│  │
+│  └─rest
+│          InternalServerException.java
+│          OutOfStockException.java
+│          ResourceExistException.java
+│          ResourceNotFoundException.java
+│          RestControllerException.java
+│          ValidationFailedException.java
+│
+├─repository
+│      CartItemRepository.java
+│      CartRepository.java
+│      ItemImageRepository.java
+│      ItemRepository.java
+│      ItemRepositoryCustom.java
+│      ItemRepositoryCustomImpl.java
+│      MemberRepository.java
+│      OrderItemRepository.java
+│      OrderRepository.java
+│      OrderRepositoryCustom.java
+│      OrderRepositoryCustomImpl.java
+│
+└─service
+        CartService.java
+        FileService.java
+        ItemImageService.java
+        ItemService.java
+        MemberService.java
+        OrderService.java
+        PaginationService.java
