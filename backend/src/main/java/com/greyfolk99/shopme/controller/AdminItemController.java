@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -121,7 +122,9 @@ public class AdminItemController {
             @PathVariable Long itemId
     ) {
         itemService.deleteItem(itemId);
-        return ResponseEntity.ok(itemId);
+
+        Map<String, String> body = Map.of("message", "상품이 삭제되었습니다.");
+        return ResponseEntity.ok(body);
     }
 
     // 상품 관리 페이지
