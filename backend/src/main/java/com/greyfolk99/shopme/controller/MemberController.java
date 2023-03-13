@@ -19,6 +19,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -83,6 +85,7 @@ public class MemberController {
             HttpServletRequest request,
             Principal principal
     ) {
+
         Member member = (Member) memberService.loadUserByUsername(principal.getName());
         memberService.deleteMember(member);
 
@@ -94,6 +97,10 @@ public class MemberController {
         cookie.setMaxAge(0);
 
         SecurityContextHolder.clearContext();
-        return ResponseEntity.ok().build();
+
+        Map<String, String> body = new HashMap<>();
+        body.put("message", "회원탈퇴가 완료되었습니다.");
+
+        return ResponseEntity.ok(body);
     }
 }

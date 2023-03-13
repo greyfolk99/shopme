@@ -79,7 +79,9 @@
             location.href='/';
           },
           error : function(jqXHR, status, error){
+            console.log(jqXHR)
             console.log(status)
+            console.log(error)
             alert(jqXHR.responseJSON.message);
           }
         });

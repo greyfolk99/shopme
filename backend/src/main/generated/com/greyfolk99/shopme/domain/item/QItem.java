@@ -50,8 +50,6 @@ public class QItem extends EntityPathBase<Item> {
     //inherited
     public final StringPath modifiedBy = _super.modifiedBy;
 
-    public final ListPath<com.greyfolk99.shopme.domain.order.OrderItem, com.greyfolk99.shopme.domain.order.QOrderItem> orderItems = this.<com.greyfolk99.shopme.domain.order.OrderItem, com.greyfolk99.shopme.domain.order.QOrderItem>createList("orderItems", com.greyfolk99.shopme.domain.order.OrderItem.class, com.greyfolk99.shopme.domain.order.QOrderItem.class, PathInits.DIRECT2);
-
     public final NumberPath<Integer> price = createNumber("price", Integer.class);
 
     public final NumberPath<Integer> soldCount = createNumber("soldCount", Integer.class);

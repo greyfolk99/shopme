@@ -30,9 +30,13 @@ public class QItemImage extends EntityPathBase<ItemImage> {
     //inherited
     public final StringPath createdBy = _super.createdBy;
 
+    public final DateTimePath<java.time.LocalDateTime> deletedAt = createDateTime("deletedAt", java.time.LocalDateTime.class);
+
     public final com.greyfolk99.shopme.domain.resource.QFileInfo fileInfo;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
 
     public final QItem item;
 

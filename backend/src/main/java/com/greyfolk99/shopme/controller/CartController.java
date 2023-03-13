@@ -9,11 +9,13 @@ import com.greyfolk99.shopme.dto.request.CartItemRequest;
 import com.greyfolk99.shopme.dto.response.CartListResponse;
 import com.greyfolk99.shopme.exception.ExceptionClass;
 import com.greyfolk99.shopme.exception.rest.ResourceNotFoundException;
+import com.greyfolk99.shopme.exception.rest.ValidationFailedException;
 import com.greyfolk99.shopme.service.CartService;
 import com.greyfolk99.shopme.service.MemberService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -44,17 +46,21 @@ public class CartController {
     @ApiOperation(value = "장바구니에 상품 추가", notes = "장바구니에 상품을 추가합니다. (비회원은 쿠키에 저장)")
     @PostMapping(value = "/cart/api/item") @ResponseBody
     public ResponseEntity<?> addCart(
-            HttpServletRequest request, HttpServletResponse response, Principal principal,
+            HttpServletRequest request, Principal principal,
             @CookieValue(name = "cartItems", required = false) Cookie cookie,
-            @RequestBody @Valid CartItemRequest cartItemRequest, BindingResult bindingResult
-    ) {
+            @RequestBody @Valid CartItemRequest cartItemRequest, BindingResult bindingResult,
+            HttpServletResponse response
+            ) {
+
+        Map<String, String> body = new HashMap<>();
+
         // Validation
         if (bindingResult.hasErrors()) {
             StringBuilder sb = new StringBuilder();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 sb.append(fieldError.getDefaultMessage());
             }
-            return ResponseEntity.badRequest().body(sb.toString()); // text
+            throw new ValidationFailedException(ExceptionClass.CART_ITEM, sb.toString());
         }
         // 비회원 (이미 쿠키에 있는 상품 ? 수량만 더해줌 : 새로 리스트에 추가하고 쿠키 업데이트)
         if (principal == null || principal instanceof AnonymousAuthenticationToken) {
@@ -73,14 +79,16 @@ public class CartController {
                 "cartItems", cartItemsFromCookie, 60 * 60 * 24 * 7);
             response.setHeader("Set-Cookie", responseCookie.toString());
             response.setHeader("Cache-Control", "no-cache");
-            return ResponseEntity.ok().build();
+            body.put("message", "장바구니에 상품이 추가되었습니다.");
+            return ResponseEntity.ok(body);
         }
         // 회원 (DB에 추가)
         else {
             System.out.println("회원");
             Member member = (Member) memberService.loadUserByUsername(principal.getName());
             Long cartItemId = cartService.addCartItem(cartItemRequest, member);
-            return ResponseEntity.ok(cartItemId); // text
+            body.put("message", "장바구니에 상품이 추가되었습니다.");
+            return ResponseEntity.ok().body(body); // text
         }
     }
 
@@ -90,6 +98,7 @@ public class CartController {
             Model model,
             @CookieValue(name="cartItems", required=false) Cookie cookie
     ) {
+
         try {
             // 쿠키 파싱
             List<CartItemRequest> cookieCartItems = cookie == null ?
@@ -125,13 +134,15 @@ public class CartController {
             @CookieValue(name = "cartItems", required = false) Cookie cookie,
             @RequestBody @Valid CartItemRequest cartItemRequest, BindingResult bindingResult
     ) {
+        Map<String, String> body = new HashMap<>();
+
         // Validation
         if (bindingResult.hasErrors()) {
             StringBuilder sb = new StringBuilder();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 sb.append(fieldError.getDefaultMessage());
             }
-            return ResponseEntity.badRequest().body(sb.toString());
+            throw new ValidationFailedException(ExceptionClass.CART_ITEM, sb.toString());
         }
         // 비회원 (쿠키에서 일치하는 상품 찾아서 수량 갱신)
         if (principal == null || principal instanceof AnonymousAuthenticationToken) {
@@ -147,13 +158,15 @@ public class CartController {
                     "cartItems", cartItemsFromCookie, 60 * 60 * 24 * 7);
             response.setHeader("Set-Cookie", responseCookie.toString());
             response.setHeader("Cache-Control", "no-cache");
-            return ResponseEntity.ok().build();
+            body.put("message", "장바구니 상품 수량이 갱신되었습니다.");
+            return ResponseEntity.ok(body);
         }
         // 회원 (DB에서 일치하는 상품 찾아서 수량 갱신)
         else {
             Member member = (Member) memberService.loadUserByUsername(principal.getName());
             Long cartItemId = cartService.updateCartItemCount(cartItemRequest, member);
-            return ResponseEntity.ok(cartItemId);
+            body.put("message", "장바구니 상품 수량이 갱신되었습니다.");
+            return ResponseEntity.ok(body);
         }
     }
 
@@ -164,6 +177,8 @@ public class CartController {
         @CookieValue(name = "cartItems", required = false) Cookie cookie,
         @RequestParam("itemId") Long itemId
     ) {
+        Map<String, String> body = new HashMap<>();
+
         // 비회원 (쿠키에서 아이디 일치하는 상품 제거 후 업데이트)
         List<CartItemRequest> before = cookie == null ?
             new ArrayList<>() : cookieHandler.decode(cookie, new TypeToken<List<CartItemRequest>>(){});
@@ -181,7 +196,8 @@ public class CartController {
             cartService.deleteCartItem(itemId, member);
         }
 
-        return ResponseEntity.ok(itemId);
+        body.put("message", "장바구니 상품이 삭제되었습니다.");
+        return ResponseEntity.ok(body);
     }
 }
 

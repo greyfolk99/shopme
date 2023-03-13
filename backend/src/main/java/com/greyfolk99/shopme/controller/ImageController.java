@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 public class ImageController {
@@ -22,6 +25,8 @@ public class ImageController {
             @PathVariable("imageId") Long imageId
     ) {
         itemImageService.deleteItemImage(imageId);
-        return ResponseEntity.ok().build();
+        Map<String, String> body = new HashMap<>();
+        body.put("message", "상품 이미지 삭제 성공");
+        return ResponseEntity.ok(body);
     }
 }

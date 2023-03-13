@@ -1,8 +1,5 @@
 package com.greyfolk99.shopme.config;
 
-import com.greyfolk99.shopme.config.oAuth.KakaoOAuth2Response;
-import com.greyfolk99.shopme.domain.member.Member;
-import com.greyfolk99.shopme.domain.member.Role;
 import com.greyfolk99.shopme.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -47,23 +40,20 @@ public class SecurityConfig {
     private String tokenKey;
 
     @Bean
-    public SecurityFilterChain configure(
-            HttpSecurity http,
-            OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService
-    ) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return
-
     http
         .csrf()
             .and()
-        .userDetailsService(memberService)
         .authorizeHttpRequests( auth -> auth
-            .antMatchers("/css/**", "/js/**", "/image/**").permitAll()
-            .antMatchers("/admin*/**").hasRole("ADMIN")
-            .antMatchers("/order*/**", "/member*/**").hasAnyRole("ADMIN", "MEMBER")
-            .antMatchers("/", "/auth/join","/auth/login", "/item/*", "/cart", "/cart/api/item*").permitAll()
-            .anyRequest().authenticated()
-            .and())
+                .antMatchers("/css/**", "/js/**", "/image/**").permitAll()
+                .antMatchers("/admin*/**").hasRole("ADMIN")
+                .antMatchers("/order*/**", "/member*/**").hasAnyRole("ADMIN", "MEMBER")
+                .antMatchers("/", "/auth/join","/auth/login", "/item/*", "/cart", "/cart/api/item")
+                .permitAll()
+                .anyRequest().authenticated()
+                .and())
+        .userDetailsService(memberService)
         .rememberMe()
             .key(tokenKey)
             .rememberMeParameter("remember-me")
@@ -78,11 +68,6 @@ public class SecurityConfig {
             .failureHandler(loginFailHandler())
             .successHandler(successHandler())
             .and()
-        .oauth2Login(oAuth -> oAuth
-            .userInfoEndpoint(userInfo -> userInfo
-                .userService(oAuth2UserService))
-            .failureHandler(loginFailHandler())
-            .successHandler(successHandler()))
         .exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler())
             .authenticationEntryPoint(authenticationEntryPoint())
@@ -95,7 +80,8 @@ public class SecurityConfig {
         .sessionManagement(configurer -> configurer
             .maximumSessions(5)
             .maxSessionsPreventsLogin(true)
-            .expiredUrl("/?error=true&exception=" + URLEncoder.encode("세션이 만료되었습니다.", StandardCharsets.UTF_8)))
+            .expiredUrl("/?error=true&exception=" +
+                    URLEncoder.encode("세션이 만료되었습니다.", StandardCharsets.UTF_8)))
         .build();
     }
 
@@ -150,32 +136,6 @@ public class SecurityConfig {
                 response.sendRedirect("/"); return;
             }
             response.sendRedirect(redirectUrl);
-        };
-    }
-
-    @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService(
-            MemberService memberService,
-            PasswordEncoder passwordEncoder
-    ) {
-        final DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
-
-        return userRequest -> {
-            OAuth2User oAuth2User = delegate.loadUser(userRequest);
-            KakaoOAuth2Response kakaoResponse = KakaoOAuth2Response.from(oAuth2User.getAttributes());
-            String registrationId = userRequest.getClientRegistration().getRegistrationId();
-            String providerId = String.valueOf(kakaoResponse.id());
-
-            Member kakaoMember = memberService.saveOAuthMember(
-                Member.ofOAuth(
-                    registrationId + "_" + providerId,
-                    passwordEncoder.encode("{bcrypt}" + UUID.randomUUID()),
-                    kakaoResponse.nickname(),
-                    Role.MEMBER
-                )
-            );
-            return memberService.findMember(kakaoMember.getUsername())
-                    .orElseGet(() -> memberService.saveOAuthMember(kakaoMember));
         };
     }
 

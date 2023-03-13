@@ -11,7 +11,6 @@ import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,7 +22,7 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "is_deleted = 0")
 @SQLDelete(sql = "UPDATE member SET is_deleted = 1, deleted_at = NOW() WHERE member_uuid = ?")
-public class Member extends BaseEntity implements UserDetails, OAuth2User {
+public class Member extends BaseEntity implements UserDetails{
 
     @Id @GeneratedValue(generator = "uuid2") @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)", name = "member_uuid")
@@ -45,7 +44,7 @@ public class Member extends BaseEntity implements UserDetails, OAuth2User {
 
     @OneToMany(mappedBy = "member") @Builder.Default
     private List<Order> orders = new ArrayList<>();
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
 
     @Transient
@@ -79,7 +78,6 @@ public class Member extends BaseEntity implements UserDetails, OAuth2User {
 
     @Override public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<>(List.of(new RoleAdapter(role)));}
-    @Override public Map<String, Object> getAttributes() {return oAuth2Attributes;}
     @Override public String getUsername() {return email;}
     @Override public boolean isAccountNonExpired() {return true;}
     @Override public boolean isAccountNonLocked() {return true;}

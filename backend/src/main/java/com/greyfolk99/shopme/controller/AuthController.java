@@ -65,6 +65,7 @@ public class AuthController {
         // join
         try {
             Member member = memberService.saveMember(memberForm, passwordEncoder);
+            log.info("회원가입 성공: " + member.getUsername());
         } catch (Exception e) {
             model.addAttribute("exception", e.getMessage());
             log.error(e.toString());
