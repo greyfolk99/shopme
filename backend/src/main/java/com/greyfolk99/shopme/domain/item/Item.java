@@ -53,10 +53,9 @@ public class Item extends BaseEntity {
         return Item.builder().id(id).build();
     }
 
-    @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}) @ToString.Exclude @Builder.Default
+    @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true) @ToString.Exclude @Builder.Default
     private List<ItemImage> itemImages = new ArrayList<>();
-    @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE) @ToString.Exclude @Builder.Default
-    private List<OrderItem> orderItems = new ArrayList<>();
+
     @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE) @ToString.Exclude @Builder.Default
     private List<CartItem> cartItems = new ArrayList<>();
 
@@ -121,6 +120,19 @@ public class Item extends BaseEntity {
         this.stock = itemForm.getStock();
         this.itemDetail = itemForm.getItemDetail();
         this.itemStatus = itemForm.getItemStatus();
+    }
+
+    public void addImages(List<ItemImage> itemImages) {
+        this.itemImages.addAll(itemImages);
+    }
+
+    public void putImages(List<ItemImage> itemImages) {
+        this.itemImages.clear();
+        this.itemImages.addAll(itemImages);
+    }
+
+    public void removeImage(ItemImage itemImage) {
+        this.itemImages.removeIf(itemImage::equals);
     }
 
     /**

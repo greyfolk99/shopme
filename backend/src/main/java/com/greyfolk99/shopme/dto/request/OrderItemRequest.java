@@ -8,6 +8,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Getter @Setter
+@AllArgsConstructor
 @Builder(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = "itemId")
 public class OrderItemRequest {

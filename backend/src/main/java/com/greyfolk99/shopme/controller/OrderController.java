@@ -60,7 +60,10 @@ public class OrderController {
 
         OrderItemDetailRequest orderItemDetailRequest = OrderItemDetailRequest.of(orderItemRequest);
         Long orderId = orderService.order(Set.of(orderItemDetailRequest), member);
-        return ResponseEntity.ok(orderId);
+
+        Map<String, String> body = new HashMap<>();
+        body.put("message", "주문이 완료되었습니다.");
+        return ResponseEntity.ok(body);
     }
 
     @ApiOperation(value = "장바구니에서 주문하기", notes = "장바구니에서 주문하기")
@@ -83,7 +86,10 @@ public class OrderController {
 
         // 주문
         Long orderId = cartService.orderCartItem(orderItemRequests, member);
-        return ResponseEntity.ok(orderId);
+
+        Map<String, String> body = new HashMap<>();
+        body.put("message", "주문 성공");
+        return ResponseEntity.ok(body);
     }
 
     // 주문 내역 조회
@@ -115,6 +121,9 @@ public class OrderController {
         Order validatedOrder = orderService.validateOrder(orderId, member);
         orderService.cancel(validatedOrder);
 
-        return ResponseEntity.ok(validatedOrder.getId());
+        Map<String, String> body = new HashMap<>();
+        body.put("message", "주문이 취소되었습니다.");
+
+        return ResponseEntity.ok(body);
     }
 }

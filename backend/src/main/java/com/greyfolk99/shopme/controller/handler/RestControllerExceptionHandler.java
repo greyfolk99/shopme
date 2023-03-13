@@ -2,6 +2,7 @@ package com.greyfolk99.shopme.controller.handler;
 
 import com.greyfolk99.shopme.exception.rest.RestControllerException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +33,13 @@ public class RestControllerExceptionHandler {
 
         log.error("[handCustomException] {}, {}, {}", request.getRequestURI(), e.getMessage(), e.getExceptionClass().toString());
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(new MediaType("application","json", StandardCharsets.UTF_8));
-        Map<String, String> map = new HashMap<>();
-        map.put("error type", e.getHttpStatusType());
-        map.put("code", Integer.toString(e.getHttpStatusCode()));
-        map.put("message", e.getMessage());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application","json", StandardCharsets.UTF_8));
+        Map<String, String> body = new HashMap<>();
+        body.put("error type", e.getHttpStatusType());
+        body.put("code", Integer.toString(e.getHttpStatusCode()));
+        body.put("message", e.getMessage());
 
-        return new ResponseEntity<>(map,httpHeaders,e.getHttpStatus());
+        return new ResponseEntity<>(body,headers,e.getHttpStatus());
     }
 }

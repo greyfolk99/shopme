@@ -6,6 +6,7 @@ import com.greyfolk99.shopme.dto.form.ItemForm;
 import com.greyfolk99.shopme.service.ItemService;
 import com.greyfolk99.shopme.service.PaginationService;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,6 +31,11 @@ public class AdminItemControllerTest {
     private PaginationService paginationService;
     @Autowired
     private ObjectMapper objectMapper;
+
+    @BeforeAll
+    public void setUpItems() {
+
+    }
 
     @Test
     @WithMockUser(roles = "ADMIN")
