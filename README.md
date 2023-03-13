@@ -4,5 +4,5 @@
 
 
 ### Links:
-![SHOPME](https://shopme.space) (AWS 과금시 내려갈 수 있습니다...)
-![GOOGLE SLIDE](https://docs.google.com/presentation/d/1FKcTWJwiqdWzwH8zLHUsrXvs9DxNL6MRCog-l5RzJnA/edit?usp=sharing)
+- [SHOPME](https://shopme.space) (AWS 과금시 내려갈 수 있습니다...)  
+- [GOOGLE SLIDES](https://docs.google.com/presentation/d/1FKcTWJwiqdWzwH8zLHUsrXvs9DxNL6MRCog-l5RzJnA/edit?usp=sharing)  
