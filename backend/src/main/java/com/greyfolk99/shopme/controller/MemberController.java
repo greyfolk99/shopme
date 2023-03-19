@@ -3,12 +3,17 @@ package com.greyfolk99.shopme.controller;
 
 import com.greyfolk99.shopme.domain.member.Member;
 import com.greyfolk99.shopme.dto.form.MemberForm;
+import com.greyfolk99.shopme.dto.form.MemberUpdateForm;
+import com.greyfolk99.shopme.exception.ExceptionClass;
+import com.greyfolk99.shopme.exception.rest.RestControllerException;
+import com.greyfolk99.shopme.exception.rest.ValidationFailedException;
 import com.greyfolk99.shopme.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,9 +23,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Controller
@@ -43,36 +51,51 @@ public class MemberController {
             Model model
     ) {
         Member member = (Member) memberService.loadUserByUsername(principal.getName());
-        MemberForm memberForm = memberService.getMemberFormForUpdate(member);
-        model.addAttribute("memberForm", memberForm);
+        MemberUpdateForm memberUpdateForm = memberService.getMemberFormForUpdate(member);
+
+        model.addAttribute("isSocialMember", principal instanceof OAuth2AuthenticationToken);
+        model.addAttribute("memberForm", memberUpdateForm);
+
         return "member/memberForm";
     }
 
     @PostMapping("/member/edit")
     public String updateMember(
-            @Valid MemberForm memberForm,
+            @Valid MemberUpdateForm memberUpdateForm,
             BindingResult bindingResult,
             Principal principal,
             Model model
     ) {
+        log.info("[updateMember] memberUpdateForm : {}", memberUpdateForm);
         Member member = (Member) memberService.loadUserByUsername(principal.getName());
+        model.addAttribute("isSocialMember", principal instanceof OAuth2AuthenticationToken);
 
-        if (bindingResult.hasErrors()) {
-            return "member/memberForm";
+        // 소셜 회원이면 주소만 수정 가능
+        if (principal instanceof OAuth2AuthenticationToken && !bindingResult.hasFieldErrors("address")) {
+            memberService.updateAddress(member, memberUpdateForm.getAddress());
+            return "redirect:/";
         }
 
-        if (!memberForm.getEmail().equals(member.getUsername())) {
-            bindingResult.addError(
-                new FieldError("email", "email", "이메일은 변경이 불가능합니다."));
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("memberForm", memberUpdateForm);
             return "member/memberForm";
         }
 
         try {
-            memberService.updateMember(member, memberForm, passwordEncoder);
+            if (Objects.equals(memberUpdateForm.getEmail(), member.getEmail())) {
+                throw new ValidationFailedException(ExceptionClass.MEMBER, "이메일은 변경할 수 없습니다.");
+            }
+            memberService.updateMember(member, memberUpdateForm, passwordEncoder);
+        }
+
+        catch (RestControllerException ex){
+            model.addAttribute("exception", ex.getMessage());
+            log.error("[updateMember] unexpected exception occurred : {}", ex.toString());
+            return "member/memberForm";
         }
 
         catch (Exception e) {
-            model.addAttribute("exception", "업데이트에 실패했습니다.");
+            model.addAttribute("exception", "회원정보 수정에 실패했습니다.");
             log.error("[updateMember] unexpected exception occurred : {}", e.toString());
             return "member/memberForm";
         }

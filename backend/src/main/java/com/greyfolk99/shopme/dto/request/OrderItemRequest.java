@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = "itemId")
 public class OrderItemRequest {

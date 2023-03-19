@@ -1,7 +1,9 @@
 package com.greyfolk99.shopme.service;
 
+import com.greyfolk99.shopme.domain.member.Address;
 import com.greyfolk99.shopme.domain.member.Member;
 import com.greyfolk99.shopme.dto.form.MemberForm;
+import com.greyfolk99.shopme.dto.form.MemberUpdateForm;
 import com.greyfolk99.shopme.exception.ExceptionClass;
 import com.greyfolk99.shopme.exception.rest.ResourceExistException;
 import com.greyfolk99.shopme.repository.MemberRepository;
@@ -43,13 +45,17 @@ public class MemberService implements UserDetailsService{
     }
 
     // 업데이트용 Form 가져오기
-    public MemberForm getMemberFormForUpdate(Member member){
-        return MemberForm.forUpdate(member);
+    public MemberUpdateForm getMemberFormForUpdate(Member member){
+        return MemberUpdateForm.of(member);
     }
 
     // 회원 업데이트
-    public void updateMember(Member member, MemberForm memberForm, PasswordEncoder passwordEncoder) {
+    public void updateMember(Member member, MemberUpdateForm memberForm, PasswordEncoder passwordEncoder) {
         member.update(memberForm, passwordEncoder);
+    }
+
+    public void updateAddress(Member member, Address address) {
+        member.update(address); // 소셜 로그인일 때 Member의 Address가 null일 수 있기 때문에 address를 교체 후 save를 따로 해야함
     }
 
     // 이메일 중복 검증

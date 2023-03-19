@@ -4,6 +4,7 @@ import com.greyfolk99.shopme.domain.cart.CartItem;
 import com.greyfolk99.shopme.dto.response.CartListResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,13 +21,13 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
             "and im.item.id = ci.item.id " +
             "and im.itemImageType = 'THUMBNAIL'" +
             "order by ci.createdAt desc" )
-    List<CartListResponse> findCartListResponse(Long cartId);
+    List<CartListResponse> findCartListResponse(@Param("cartId") Long cartId);
 
     @Query("select ci " +
             "from CartItem ci " +
             "join fetch ci.item i " +
             "join fetch ci.cart c " +
             "where c.id = :cartId")
-    List<CartItem> findCartItemsJoinFetchItemAndCartByCartId(Long cartId);
+    List<CartItem> findCartItemsJoinFetchItemAndCartByCartId(@Param("cartId") Long cartId);
 }
 

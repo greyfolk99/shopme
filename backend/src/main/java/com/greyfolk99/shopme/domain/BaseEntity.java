@@ -1,8 +1,10 @@
 package com.greyfolk99.shopme.domain;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -20,4 +22,6 @@ public abstract class BaseEntity extends BaseTimeEntity{
     private String createdBy;
     @LastModifiedBy
     private String modifiedBy;
+
+
 }

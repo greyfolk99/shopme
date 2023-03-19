@@ -1,6 +1,7 @@
 package com.greyfolk99.shopme.config;
 
 import com.greyfolk99.shopme.service.MemberService;
+import com.greyfolk99.shopme.service.SocialMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +36,7 @@ import java.util.UUID;
 public class SecurityConfig {
 
     private final MemberService memberService;
+    private final SocialMemberService socialMemberService;
 
     @Value("${server.remember-me-key}")
     private String tokenKey;
@@ -49,7 +51,7 @@ public class SecurityConfig {
                 .antMatchers("/css/**", "/js/**", "/image/**").permitAll()
                 .antMatchers("/admin*/**").hasRole("ADMIN")
                 .antMatchers("/order*/**", "/member*/**").hasAnyRole("ADMIN", "MEMBER")
-                .antMatchers("/", "/auth/join","/auth/login", "/item/*", "/cart", "/cart/api/item")
+                .antMatchers("/", "/auth/join","/auth/login", "/item/*", "/cart", "/cart/api/item", "/oauth2/callback/**", "/error**")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and())
@@ -67,6 +69,13 @@ public class SecurityConfig {
             .passwordParameter("password")
             .failureHandler(loginFailHandler())
             .successHandler(successHandler())
+            .and()
+        .oauth2Login()
+            .redirectionEndpoint().baseUri("/oauth2/callback/*").and()
+            .userInfoEndpoint().userService(socialMemberService).and()
+            .successHandler(successHandler())
+            .failureHandler(loginFailHandler())
+            .defaultSuccessUrl("/")
             .and()
         .exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler())
@@ -139,9 +148,5 @@ public class SecurityConfig {
         };
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
 }
 
