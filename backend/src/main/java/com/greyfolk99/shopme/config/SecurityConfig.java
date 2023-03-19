@@ -71,7 +71,7 @@ public class SecurityConfig {
             .successHandler(successHandler())
             .and()
         .oauth2Login()
-            .redirectionEndpoint().baseUri("/oauth2/callback/*").and()
+            .redirectionEndpoint().baseUri("/oauth2/callback/**").and()
             .userInfoEndpoint().userService(socialMemberService).and()
             .successHandler(successHandler())
             .failureHandler(loginFailHandler())
@@ -84,6 +84,9 @@ public class SecurityConfig {
         .logout()
             .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
             .logoutSuccessUrl("/")
+            .invalidateHttpSession(true)
+            .clearAuthentication(true)
+            .deleteCookies("JSESSIONID", "remember-me")
             .and()
 
         .sessionManagement(configurer -> configurer
