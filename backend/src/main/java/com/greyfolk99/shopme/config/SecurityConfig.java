@@ -84,6 +84,9 @@ public class SecurityConfig {
         .logout()
             .logoutUrl("/member/logout")
             .logoutSuccessUrl("/")
+            .invalidateHttpSession(true)
+            .clearAuthentication(true)
+            .deleteCookies("JSESSIONID", "remember-me")
             .and()
 
         .sessionManagement(configurer -> configurer
