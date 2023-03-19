@@ -50,19 +50,25 @@ public class OrderService {
         final Order order = Order.of(member);
         // 주문
         orderItemDto.forEach(dto -> {
-            // Item 영속
-            Item item = findItemById(dto.getItemId());
-            // * 주문 프로세스 (예: 결제나 배송 관련 로직이 연계되는 부분)
-            boolean isSuccess;
-            isSuccess = true;
-            if (isSuccess) {
-                order.confirm();
-                // Item 재고 업데이트 *Throwable OutOfStockException
-                item.sold(dto.getCount());
-                // OrderItem 생성 후 Order 객체에 추가
-                OrderItem orderItem = OrderItem.of(order, item, dto.getCount());
-                order.addOrderItem(orderItem);
+            // * 주문 프로세스 (예: 결제나 배송 관련 로직 및 검증이 연계되는 부분)
+
+            // 1. 주소 검증
+            if (member.getAddress() == null) {
+                throw new InternalServerException(ExceptionClass.MEMBER, "회원 정보 수정에서 주소를 입력해주세요.");
             }
+
+            // 2. 재고 검증 - Item 재고 업데이트 *Throwable OutOfStockException
+            Item item = findItemById(dto.getItemId());
+            item.sold(dto.getCount());
+
+
+            // 검증 완료
+            order.confirm();
+
+            // OrderItem 생성 후 Order 객체에 추가
+            OrderItem orderItem = OrderItem.of(order, item, dto.getCount());
+            order.addOrderItem(orderItem);
+
         });
         // Order, OrderItem 같이 저장(CASCADE 옵션으로 같이 저장)
         Order savedOrder = orderRepository.save(order);

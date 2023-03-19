@@ -41,3 +41,5 @@ backend/src/main/resources/application.yml
 ### Ignored directories in parent directory ###
 backend/item/
 /.idea/
+
+scrapper/ChromeData/

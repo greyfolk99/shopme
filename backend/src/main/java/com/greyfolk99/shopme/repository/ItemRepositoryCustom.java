@@ -8,9 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 
 public interface ItemRepositoryCustom {
-
     Page<Item> getItemPage(SearchForm searchForm, Pageable pageable);
     // @QueryProjection 을 이용하여 바로 Dto 객체 반환
     Page<ItemPreviewResponse> getHomeItemPage(SearchForm searchForm, Pageable pageable);
-
 }

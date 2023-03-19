@@ -60,6 +60,7 @@ public class AuthController {
     ) {
         // validation 실패 시
         if (bindingResult.hasErrors()) {
+            model.addAttribute("memberForm", memberForm);
             return "member/memberForm";
         }
         // join

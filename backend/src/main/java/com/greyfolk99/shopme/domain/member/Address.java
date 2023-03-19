@@ -17,4 +17,11 @@ public class Address {
     @NotBlank(message = "상세 주소는 필수 입력 값입니다.")
     private String address2;
     private String address3;
+
+    public void update(Address address){
+        zipcode = address.getZipcode();
+        address1 = address.getAddress1();
+        address2 = address.getAddress2();
+        address3 = address.getAddress3();
+    }
 }
