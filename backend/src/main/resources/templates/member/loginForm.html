@@ -39,7 +39,7 @@
         </div>
 
         <!-- 예외 메세지 -->
-        <p th:if="${error}" class="error" th:text="${exception}"></p>
+        <p th:if="${error}" class="error m-2" th:text="${exception}"></p>
 
         <div class="form-group m-2">
           <label for="remember-me">로그인 상태 유지</label>
@@ -50,10 +50,10 @@
         <button type="submit" class="btn btn-dark m-2">로그인</button>
         <button type="button" class="btn btn-dark m-2" onClick="location.href='/auth/join'">회원가입</button>
         <br>
-        <button th:href="@{/oauth2/authorization/google(prompt='select_account')}" class="btn btn-dark btn-google m-2">
+        <a th:href="@{/oauth2/authorization/google(prompt='select_account')}" class="btn btn-dark btn-google m-2">
           <i class="fab fa-google"></i>
           Log in with Google
-        </button>
+        </a>
         <!-- Button to log in with Kakao -->
         <!-- Business 세팅 필요
         <button th:href="@{/oauth2/authorization/kakao}" class="btn btn-dark btn-kakao m-2">
