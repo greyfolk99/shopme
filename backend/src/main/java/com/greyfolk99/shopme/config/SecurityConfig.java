@@ -82,13 +82,12 @@ public class SecurityConfig {
             .authenticationEntryPoint(authenticationEntryPoint())
             .and()
         .logout()
-            .logoutUrl("/member/logout")
-            .logoutSuccessUrl("/")
+            .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout")) // CSRF 사용할때 .logoutUrl() 대신 사용
             .invalidateHttpSession(true)
             .clearAuthentication(true)
             .deleteCookies("JSESSIONID", "remember-me")
+            .logoutSuccessUrl("/")
             .and()
-
         .sessionManagement(configurer -> configurer
             .maximumSessions(5)
             .maxSessionsPreventsLogin(true)
