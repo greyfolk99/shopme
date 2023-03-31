@@ -4,6 +4,7 @@ import com.greyfolk99.shopme.domain.member.Member;
 import com.greyfolk99.shopme.domain.order.Order;
 import com.greyfolk99.shopme.dto.request.OrderItemDetailRequest;
 import com.greyfolk99.shopme.dto.request.OrderItemRequest;
+import com.greyfolk99.shopme.dto.request.OrderRequest;
 import com.greyfolk99.shopme.dto.response.OrderHistoryResponse;
 import com.greyfolk99.shopme.exception.ExceptionClass;
 import com.greyfolk99.shopme.exception.rest.ValidationFailedException;
@@ -17,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +26,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
 import java.security.Principal;
 import java.util.*;
 
@@ -70,11 +69,11 @@ public class OrderController {
     @PostMapping(value = "/order/api/cart") @ResponseBody
     public ResponseEntity<?> orderFromCart(
             Principal principal,
-            @RequestBody @Valid List<OrderItemRequest> orderItemRequests,
+            @RequestBody @Valid OrderRequest orderRequest,
             BindingResult bindingResult
     ) {
         // Validation
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() ) {
             StringBuilder sb = new StringBuilder();
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
             for (FieldError fieldError : fieldErrors) {
@@ -85,7 +84,7 @@ public class OrderController {
         Member member = (Member) memberService.loadUserByUsername(principal.getName());
 
         // 주문
-        Long orderId = cartService.orderCartItem(orderItemRequests, member);
+        Long orderId = cartService.orderCartItem(orderRequest, member);
 
         Map<String, String> body = new HashMap<>();
         body.put("message", "주문 성공");

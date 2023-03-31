@@ -112,23 +112,23 @@
     function order() {
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
-        const orderItemRequests = [];
+        const data = {
+            orderItemRequests : []
+        }
         $("input[name=cartChkBox]:checked").each(function() {
             const itemId = $(this).attr("data-item-id");
             const count = $("#count_" + itemId).val();
-            orderItemRequests.push({
+            data.orderItemRequests.push({
                 "itemId" : itemId,
                 "count" : count
             });
         });
-        const param = JSON.stringify(orderItemRequests);
-        console.log(param);
         if (!confirm("주문하시겠습니까?")) { return; }
         $.ajax({
             url: "/order/api/cart",
             type: "POST",
             contentType: "application/json",
-            data: param,
+            data: JSON.stringify(data),
             beforeSend: function (xhr) {
                 /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
                 xhr.setRequestHeader(header, token);

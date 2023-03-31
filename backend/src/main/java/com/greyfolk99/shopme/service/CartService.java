@@ -7,6 +7,7 @@ import com.greyfolk99.shopme.domain.member.Member;
 import com.greyfolk99.shopme.dto.request.CartItemRequest;
 import com.greyfolk99.shopme.dto.request.OrderItemDetailRequest;
 import com.greyfolk99.shopme.dto.request.OrderItemRequest;
+import com.greyfolk99.shopme.dto.request.OrderRequest;
 import com.greyfolk99.shopme.dto.response.CartListResponse;
 import com.greyfolk99.shopme.exception.ExceptionClass;
 import com.greyfolk99.shopme.exception.rest.*;
@@ -98,7 +99,9 @@ public class CartService {
     }
 
     // 주문 생성
-    public Long orderCartItem(List<OrderItemRequest> orderItemRequests, Member member) {
+    public Long orderCartItem(OrderRequest orderRequest, Member member) {
+
+        List<OrderItemRequest> orderItemRequests = orderRequest.getOrderItemRequests();
 
         Cart cart = getCartByMember(member);
         List<CartItem> cartItems = cartItemRepository.findCartItemsJoinFetchItemAndCartByCartId(cart.getId());
